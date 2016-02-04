@@ -6,7 +6,7 @@ import ConfigParser
 from time import strftime, localtime, strptime, time
 from subprocess import CalledProcessError, check_output
 import sys
-
+import Tkinter as tk
 
 def requete_complete(path_fichier_de_conf, requete_a_lancer):
     """
@@ -102,6 +102,67 @@ def date_du_jour():
     mois = maintenant.month
 
     return "{jour} {mois}".format(jour=jour, mois=mois_lettres_chiffres[mois]).encode("utf-8")
+
+
+class ServerMenu(tk.Toplevel):
+    def __init__(self, master, xoffset, height, type_server):
+        """
+        General class overridding Tkinter.Toplevel, in order to have a vertical scrollbar.
+        Contains an instance of ServerFrame, that actually contains the buttons and entries.
+
+            \\\\--> Does not do anything else than getting a scrollbar. <--////
+
+        If you want to add some widgets after the __default__ menu, you shall do something like this:
+        >>> class My_Menu:
+        >>>    def __init__(self, master, offset):
+        >>>        self.menu = ServerMenu(master, offset, "My_Type")    # creates the frame and the default HILC menu
+        >>>        self.label = tk.Label(self.menu.frame, text="Note the self.menu.frame as master.")
+        >>>        self.label.grid(your_grid_args)
+        >>>        self.menu.mainloop()
+
+        :param master: shall be Main.Main()
+        :param xoffset:
+        :param type_server: "WSIC" or "WSTC"
+        :return:
+        """
+        tk.Toplevel.__init__(self, master)
+        self.Type_server = type_server
+        width = 400
+        # height = ctypes.windll.user32.GetSystemMetrics(1)-50
+        yoffset = 0
+        self.geometry("%dx%d%+d%+d" % (width, height, xoffset, yoffset))
+
+        self.title('TS-{} Controls'.format(self.Type_server))
+        self.protocol("WM_DELETE_WINDOW", self.onClose)
+        self.resizable(False, True)
+
+        self.canvas = tk.Canvas(self)
+
+        # ----  Here is the real frame.  ----
+        self.frame = tk.Frame(self.Type_server, self.canvas)
+        # ----  -----------------------  ----
+
+        self.vsb = tk.Scrollbar(self, orient="vertical", command=self.canvas.yview)
+        self.canvas.configure(yscrollcommand=self.vsb.set)
+        self.canvas.bind("<MouseWheel>", self._on_mousewheel)
+        self.vsb.pack(side="right", fill="y")
+        self.canvas.pack(side="left", fill="both", expand=True)
+        self.canvas.create_window((4, 4), window=self.frame, anchor="nw",
+                                  tags="self.frame")
+        self.frame.bind("<Configure>", self.onFrameConfigure)
+
+    def onFrameConfigure(self, event):
+        """
+        Reset the scroll region to encompass the inner frame
+        """
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+
+    def onClose(self):
+        self.destroy()
+
+    def _on_mousewheel(self, event):
+        self.canvas.yview_scroll(-1*(event.delta/120), "units")
+
 
 if __name__ == "__main__":
     pass
