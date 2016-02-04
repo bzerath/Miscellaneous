@@ -10,6 +10,7 @@ NOMBRE_A_CHERCHER = 2
 NOMBRE_TROUVE = 0
 VERBOSE = False
 STATS = [0]*100
+ALTERNATIF = True  # False: 4.686341, True: 4.648358
 
 
 def get_begin():
@@ -27,6 +28,13 @@ def get_number_players():
         print "Please give a number."
         return get_number_players()
 
+def rand(dice):
+    if ALTERNATIF:
+        for i in xrange(random.randint(0, 9)):
+            myseed = random.random()
+            random.seed(myseed)
+    return random.randint(1, dice)
+
 
 def game(joueurs):
     global NOMBRE_A_CHERCHER
@@ -39,18 +47,19 @@ def game(joueurs):
     total = 0
 
     for j in xrange(ECHANTILLON):
-        if j % 100000 == 0:
-            print float(j)*100/ECHANTILLON, float(total)/(j+1)
+        if j % 10000 == 0:
+            print float(j)*100/ECHANTILLON, "%, moy=", float(total)/(j+1)
         nbtours = 0.
         dice = 100
         game = True
-        if VERBOSE: print "Order =", ordre_des_joueurs
+        if VERBOSE:
+            print "Order =", ordre_des_joueurs
         while game:
             for i in xrange(len(ordre_des_joueurs)):
                 nbtours += 1
                 joueur = ordre_des_joueurs[i]
 
-                dice_new = random.randint(1, dice)
+                dice_new = rand(dice)
                 if dice_new == 100 or dice_new != dice:
                     STATS[dice_new-1] += 1
 
@@ -59,7 +68,8 @@ def game(joueurs):
                                                                                 dice=dice,
                                                                                 result=dice_new)
                 if dice_new == 1 and dice == 100:
-                    if VERBOSE: print "Everybody wins 100/(players-1) points except {name} !".format(name=joueur)
+                    if VERBOSE:
+                        print "Everybody wins 100/(players-1) points except {name} !".format(name=joueur)
                     for joueur_win in joueurs:
                         if joueur_win != joueur:
                             joueurs[joueur_win] += int(100 / (len(joueurs)-1))
@@ -68,7 +78,8 @@ def game(joueurs):
                     break
                 elif dice_new == dice:
                     NOMBRE_TROUVE += 1
-                    if VERBOSE: print "{name} wins the game !".format(name=joueur)
+                    if VERBOSE:
+                        print "{name} wins the game !".format(name=joueur)
                     joueurs[joueur] += dice_new
                     game = False
                     ordre_des_joueurs = ordre_des_joueurs[i:]+ordre_des_joueurs[:i]
@@ -84,7 +95,8 @@ def game(joueurs):
                 else:
                     dice = dice_new
         total += nbtours
-        if VERBOSE: print total, "\n"
+        if VERBOSE:
+            print total, "\n"
 
     return total
 
@@ -109,6 +121,10 @@ if __name__ == "__main__":
     print "Chances d'avoir /dice X = X :", float(NOMBRE_TROUVE)*100/ECHANTILLON
     print "Détails :", [float(a)*100/ECHANTILLON for a in STATS]
 
+    test_random = 0.
+    for i in xrange(ECHANTILLON):
+        test_random += random.random()
+    print test_random/ECHANTILLON
 
 
 
