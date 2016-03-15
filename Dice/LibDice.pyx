@@ -2,6 +2,7 @@
 from __future__ import unicode_literals  # Everything is UTF-8
 import time
 import random
+import numpy
 
 
 def game_lite():
@@ -9,7 +10,7 @@ def game_lite():
 
 
 cdef void game_lite_c():
-    cdef int j = 0
+    cdef long j = 0
     cdef double now
     cdef double debut
     cdef int dice
@@ -31,7 +32,7 @@ cdef void game_lite_c():
         game = True
         partie_la_plus_grande_temp = []
         while game:
-            dice_new = random.randint(1, dice)
+            dice_new = numpy.random.randint(1, dice)
             partie_la_plus_grande_temp.append(dice_new)
             if len(partie_la_plus_grande_temp) >= len(partie_la_plus_grande):
                 partie_la_plus_grande = partie_la_plus_grande_temp[:]
