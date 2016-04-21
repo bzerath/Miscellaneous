@@ -7,7 +7,6 @@ import time
 import struct
 
 logger = logging.getLogger(__name__)
-loggerEchanges = logging.getLogger("logs_scenario")
 
 
 def CONVERT_HexStr2Bin(HexStrValue):
@@ -66,6 +65,7 @@ class Server(object):
 
     def Server_Run(self):
         """
+        Just an example.
         >>> serveur = Server(...)
         >>> thread = threading.Thread(target=serveur.Server_Run)
         >>> thread.daemon = True
