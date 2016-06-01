@@ -66,22 +66,30 @@ class Grid:
                     square = self.getSquare(numCol, numLine)
 
                     # Remove possible elements basing on the line
-                    for element in [a for a in ligne if a != " "]:
+                    for element in [a for a in ligne if a.value != " "]:
                         if element.value in self.grid[numLine][numCol].possible:
                             self.grid[numLine][numCol].possible.remove(element.value)
 
                     # Remove possible elements basing on the column
-                    for element in [a for a in colonne if a != " "]:
+                    for element in [a for a in colonne if a.value != " "]:
                         if element.value in self.grid[numLine][numCol].possible:
                             self.grid[numLine][numCol].possible.remove(element.value)
 
                     # Remove possible elements basing on the square
-                    for element in [a for a in square if a != " "]:
+                    for element in [a for a in square if a.value != " "]:
                         if element.value in self.grid[numLine][numCol].possible:
                             self.grid[numLine][numCol].possible.remove(element.value)
 
                     if len(self.grid[numLine][numCol].possible) == 1:
                         self.grid[numLine][numCol].validate()
+                        continue
+
+                    # If we have not stopped, we can try something else
+                    square_possibilities = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0}
+                    #for element in
+
+
+
         return encore_qqch_a_remplir
 
     def __str__(self):
@@ -95,15 +103,20 @@ class Grid:
 
 
 if __name__ == "__main__":
-    grid = Grid("grid1.csv")
+    grid = Grid("grid4.csv")
     print(grid)
-    print "-------"
+    print "0-------"
 
     vague = grid.faire_une_passe()
-    while vague:
+    print(grid)
+    print "1-------"
+    i = 2
+    while (vague and i <= 100):
         vague = grid.faire_une_passe()
         print(grid)
-        print "-------"
+        print "{i}-------".format(i=i)
+        i += 1
+    print grid.grid[8][7].possible
 
 
 
