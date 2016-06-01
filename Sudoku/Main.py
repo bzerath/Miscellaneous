@@ -14,9 +14,13 @@ class Case:
             assert 1 <= value <= 9
             self.value = value
 
-    def validate(self):
-        assert len(self.possible) == 1
-        self.value = self.possible[0]
+    def validate(self, value = None):
+        if not value:
+            assert len(self.possible) == 1
+            self.value = self.possible[0]
+        else:
+            assert 1 <= value <= 9
+            self.value = value
         self.possible = None
 
     def __str__(self):
@@ -86,9 +90,15 @@ class Grid:
 
                     # If we have not stopped, we can try something else
                     square_possibilities = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0}
-                    #for element in
-
-
+                    for element in [a for a in square if a.value == " "]:
+                        for possibility in element.possible:
+                            square_possibilities[possibility] += 1
+                    for possibility in square_possibilities:
+                        if square_possibilities[possibility] == 1:
+                            print self.grid[numLine][numCol].value, self.grid[numLine][numCol].possible, numLine, numCol
+                            if possibility in self.grid[numLine][numCol].possible:
+                                self.grid[numLine][numCol].validate(value=possibility)
+                                break
 
         return encore_qqch_a_remplir
 
@@ -103,7 +113,7 @@ class Grid:
 
 
 if __name__ == "__main__":
-    grid = Grid("grid4.csv")
+    grid = Grid("grid5.csv")
     print(grid)
     print "0-------"
 
@@ -116,8 +126,12 @@ if __name__ == "__main__":
         print(grid)
         print "{i}-------".format(i=i)
         i += 1
-    print grid.grid[8][7].possible
 
+    for ligne in grid.grid:
+        ligne2 = [a.value for a in ligne]
+        for numero in xrange(1, 10):
+            if numero not in ligne2:
+                print "ERREUR", ligne2
 
 
 
