@@ -4,6 +4,7 @@ import time
 import random
 import numpy
 
+# $ python setup.py build_ext --inplace
 
 def game_lite():
     game_lite_c()
@@ -19,10 +20,8 @@ cdef void game_lite_c():
 
     partie_la_plus_grande = []
     debut = time.time()
-    fichier = open("dice.txt", "w")
-    fichier.close()
 
-    while len(partie_la_plus_grande) <= 99:
+    while j < 5000000:
         j += 1
         if j % 1000000 == 0:
             now = time.time()
@@ -37,8 +36,6 @@ cdef void game_lite_c():
             if len(partie_la_plus_grande_temp) >= len(partie_la_plus_grande):
                 partie_la_plus_grande = partie_la_plus_grande_temp[:]
                 print j, ":", len(partie_la_plus_grande), "==>", " -> ".join([str(p) for p in partie_la_plus_grande])
-                with open("dice.txt", "a") as f:
-                    f.write(str(j) + " : " + str(len(partie_la_plus_grande)) + " ==> " + " -> ".join([str(p) for p in partie_la_plus_grande]) + "\n")
             if dice_new == 1 and dice == 100:
                 game = False
                 break
