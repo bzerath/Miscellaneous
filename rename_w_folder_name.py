@@ -2,7 +2,7 @@
 from __future__ import unicode_literals  # Everything is UTF-8
 import os
 
-path_folder = "F:\\Users\\bzerath\\Documents\\Mes Google Gadgets\\web\\Doujin\\Shiro Kuro Royal"
+path_folder = ""
 
 if __name__ == "__main__":
     print (os.listdir(path_folder))
