@@ -5,7 +5,7 @@ import os
 from pprint import pprint
 import datetime
 from collections import defaultdict
-import LibDice
+from settings import MA_VAR
 import locale
 import time
 import random
@@ -55,7 +55,7 @@ def game_lite():
 
     while j < 5000000:
         j += 1
-        if j % 1000000 == 0:
+        if j % 1000 == 0:
             now = time.time()
             print j, "("+str(now-debut)+"sec)"
             debut = now
@@ -81,11 +81,23 @@ def game_lite():
                 dice = dice_new
 
 
-def game(joueurs):
+def update_file(file_path, parties, echantillon):
+    width = max(parties.keys())
+    lines_to_render = [str(echantillon)] + \
+                      [str(float(parties.get(i, 0))*100/echantillon)
+                       for i in xrange(1, int(width)+1)]
+    # print lines_to_render
+    with open(file_path, "a") as fichier:
+        fichier.write("\t".join(lines_to_render) + "\n")
+
+
+def game(joueurs, filepath):
     partie_la_plus_grande = []
     ordre_des_joueurs = joueurs.keys()
     nombre_de_parties = defaultdict(int)
     print "Order =", ordre_des_joueurs
+    with open(filepath, "w") as fichier:
+        pass
 
     total_de_nb_tours = 0
     j = 0
@@ -100,6 +112,7 @@ def game(joueurs):
                     datetime.datetime.now().strftime("%m-%d_%H:%M"), \
                     datetime.timedelta(seconds=now-debut), \
                     total_de_nb_tours/j
+                update_file(filepath, nombre_de_parties, j)
                 # debut = now
             nbtours = 0.
             dice = 100
@@ -120,7 +133,7 @@ def game(joueurs):
                         print " ".join([
                             print_int(j), ":",
                             str(len(partie_la_plus_grande)), "==>",
-                            " -> ".join([str(p[1]) for p in partie_la_plus_grande])
+                            "->".join([str(p[1]) for p in partie_la_plus_grande])
                         ])
                     if VERBOSE:
                         print "{nom} rolls the dice : 1d{dice} = {result} !".format(nom=joueur,
@@ -150,11 +163,14 @@ def game(joueurs):
                         break
                     else:
                         dice = dice_new
+            if len(partie_actuelle) >= len(partie_la_plus_grande) \
+                    and nombre_de_parties:
+                update_file(filepath, nombre_de_parties, j)
             total_de_nb_tours += nbtours
             nombre_de_parties[nbtours] += 1
             if VERBOSE:
                 print total_de_nb_tours, "\n"
-    except KeyboardInterrupt:
+    except:
         print "Fin forcee..."
 
     return total_de_nb_tours, partie_la_plus_grande, j, nombre_de_parties
@@ -168,6 +184,7 @@ if __name__ == "__main__":
     # game_lite()
 
     prenoms = []
+    filepath = "output_dice.tsv"
 
     with open(os.path.join("Inputs", "Names.txt"), "r") as fichier:
         for ligne in fichier.readlines():
@@ -179,7 +196,7 @@ if __name__ == "__main__":
         joueurs[prenoms[i]] = 0
 
     begin = time.time()
-    NbTours, partie_la_plus_grande, echantillon, nombre_de_parties = game(joueurs)
+    NbTours, partie_la_plus_grande, echantillon, nombre_de_parties = game(joueurs, filepath)
     end = time.time()
 
     print "--------"
@@ -198,4 +215,7 @@ if __name__ == "__main__":
     probabilites = [(key, float(value) * 100 / echantillon) for key, value in nombre_de_parties.iteritems()]
     probabilites.sort(key=lambda colonnes: colonnes[1], reverse=True)
     print sum(p[1] for p in probabilites)
-    pprint(probabilites)
+    for nbt, proba in probabilites:
+        print "{} tours : {}%".format(int(nbt), proba)
+
+    update_file(filepath, nombre_de_parties, echantillon)
