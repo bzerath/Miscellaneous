@@ -5,8 +5,6 @@ import os
 from pprint import pprint
 import datetime
 from collections import defaultdict
-from settings import MA_VAR
-import locale
 import time
 import random
 
@@ -30,7 +28,7 @@ def get_number_players():
 
 
 def print_int(number):
-    number = str(number)
+    number = str(int(number))
     output = []
     mille = 0
     for digit in reversed(number):
@@ -203,9 +201,10 @@ if __name__ == "__main__":
     print "Scores :"
     pprint(joueurs)
     print "--------"
-    print "Durée pour {nb} parties : {temps} secondes".format(
-        nb=print_int(echantillon),
-        temps=int(end-begin))
+    print "Durée pour {nb_total} parties : {temps} secondes ({nb_ratio}/sec)".format(
+        nb_total=print_int(echantillon),
+        temps=int(end-begin),
+        nb_ratio=print_int(echantillon/(end-begin)))
     print 'Bilan sur {nb} parties :'.format(nb=print_int(echantillon))
     print "\tMoyenne de nombre de tours =", NbTours / echantillon
     print "\tPartie la plus longue : \n\t\t", \
