@@ -94,10 +94,8 @@ def game(joueurs, filepath):
     ordre_des_joueurs = joueurs.keys()
     nombre_de_parties = defaultdict(int)
     print "Order =", ordre_des_joueurs
-    with open(filepath, "w") as fichier:
-        pass
 
-    total_de_nb_tours = 0
+    total_de_nb_tours = 0.
     j = 0
     debut = int(time.time())
 
@@ -107,12 +105,13 @@ def game(joueurs, filepath):
             if j % 100000000 == 0:
                 now = int(time.time())
                 print j, \
-                    datetime.datetime.now().strftime("%m-%d_%H:%M"), \
+                    datetime.datetime.now().strftime("%d-%m_%H:%M"), \
                     datetime.timedelta(seconds=now-debut), \
-                    total_de_nb_tours/j
+                    total_de_nb_tours/j, \
+                    print_int(j/(now-debut))
                 update_file(filepath, nombre_de_parties, j)
                 # debut = now
-            nbtours = 0.
+            nbtours = 0
             dice = 100
             game = True
             if VERBOSE:
