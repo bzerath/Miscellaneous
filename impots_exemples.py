@@ -75,6 +75,10 @@ if __name__ == "__main__":
     print calcul_impot(5, 1)
     print calcul_impot(revenu=85000,
                        nb_parts=2)
+    print "\n"
+    print calcul_impot(26817, 1), 26817*0.14
+    print calcul_impot(26818, 1), 26818*0.3
+    print calcul_impot(26819, 1), 26819*0.3
 
     # with open("impots.csv", 'w') as fichier:
     #     fichier.write("revenu fiscal;impot seul;impot a 2;impot a 3;impot a 7\n")
