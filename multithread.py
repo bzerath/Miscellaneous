@@ -1,7 +1,5 @@
-import collections
+import collections.abc as collections
 import datetime
-import math
-import pprint
 import time
 import multiprocessing
 import multiprocessing.pool
@@ -31,8 +29,9 @@ def multiproc_this_loop(func: collections.Callable,
 
 def fonction(valeur, a, b):
     begin = time.time()
-    valeur**(valeur-1)**(valeur-2)
-    print(valeur, a, b)
+    # print(valeur, a, b)
+    (valeur**valeur**(valeur-2))*(valeur**valeur**(valeur-2))
+    # valeur**(valeur-1)**(valeur-2)
     return {"i": a,
             "version": b,
             "current_time": datetime.datetime.now().strftime("""%H:%M'%S" """),
@@ -40,17 +39,27 @@ def fonction(valeur, a, b):
 
 
 if __name__ == "__main__":
-    t = [9]*20
-    print(t)
+    main_value = 9
+    length = 20
+
+    t = [main_value] * length
+    begin = time.time()
+    fonction(main_value, -1, "solo")
+    print(time.time() - begin)
+    fonction(main_value, -1, "solo")
+    fonction(main_value, -1, "solo")
+    fonction(main_value, -1, "solo")
+    print("Solo :", (time.time() - begin)*5)
+
     begin = time.time()
     resultat_thread = multithread_this_loop(fonction,
                                             t)
     print("Multithread :", time.time() - begin)
-    pprint.pprint(resultat_thread)
+    # pprint.pprint(resultat_thread)
 
     begin = time.time()
     resultat_proc = multiproc_this_loop(fonction,
                                         t)
     print("Multiproc :", time.time() - begin)
-    pprint.pprint(resultat_proc)
+    # pprint.pprint(resultat_proc)
 
