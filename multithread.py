@@ -3,6 +3,8 @@ import datetime
 import time
 import multiprocessing
 import multiprocessing.pool
+import matplotlib
+import matplotlib.pyplot as plt
 
 
 def multithread_this_loop(func: collections.Callable,
@@ -30,7 +32,8 @@ def multiproc_this_loop(func: collections.Callable,
 def fonction(valeur, a, b):
     begin = time.time()
     # print(valeur, a, b)
-    (valeur**valeur**(valeur-2))*(valeur**valeur**(valeur-2))
+    (valeur**valeur**(valeur-2))#*(valeur**valeur**(valeur-2))*(valeur**valeur**(valeur-2))
+    # (valeur**valeur**(valeur-2))*(valeur**valeur**(valeur-2))*(valeur**valeur**(valeur-2))
     # valeur**(valeur-1)**(valeur-2)
     return {"i": a,
             "version": b,
@@ -40,26 +43,69 @@ def fonction(valeur, a, b):
 
 if __name__ == "__main__":
     main_value = 9
-    length = 20
+    length = 40
 
-    t = [main_value] * length
-    begin = time.time()
-    fonction(main_value, -1, "solo")
-    print(time.time() - begin)
-    fonction(main_value, -1, "solo")
-    fonction(main_value, -1, "solo")
-    fonction(main_value, -1, "solo")
-    print("Solo :", (time.time() - begin)*5)
+    estimations_sequentielles = []
+    temps_multithreads = []
+    temps_multiprocs = []
 
-    begin = time.time()
-    resultat_thread = multithread_this_loop(fonction,
+    for l in range(1, length+1):
+        print("\n", l)
+        t = [main_value] * l
+
+        begin = time.time()
+        fonction(main_value, -1, "solo")
+        fonction(main_value, -1, "solo")
+        fonction(main_value, -1, "solo")
+        estimation_sequentiel = ((time.time() - begin)/3)*l
+        print("Estimation en séquentiel :", estimation_sequentiel)
+        estimations_sequentielles.append(round(estimation_sequentiel, 2))
+
+        begin = time.time()
+        resultat_thread = multithread_this_loop(fonction,
+                                                t)
+        temps_multithread = time.time() - begin
+        print("Multithread :", temps_multithread)
+        temps_multithreads.append(round(temps_multithread, 2))
+        # pprint.pprint(resultat_thread)
+
+        begin = time.time()
+        resultat_proc = multiproc_this_loop(fonction,
                                             t)
-    print("Multithread :", time.time() - begin)
-    # pprint.pprint(resultat_thread)
+        temps_multiproc = time.time() - begin
+        print("Multiproc :", temps_multiproc)
+        temps_multiprocs.append(round(temps_multiproc, 2))
+        # pprint.pprint(resultat_proc)
 
-    begin = time.time()
-    resultat_proc = multiproc_this_loop(fonction,
-                                        t)
-    print("Multiproc :", time.time() - begin)
-    # pprint.pprint(resultat_proc)
+        ratio = estimation_sequentiel/temps_multithread
+        print("La version multi-thread est {} fois plus {} que la version séquentielle.".format(
+            round(1 - ratio, 2) * -1 if ratio > 1 else round(1 - ratio, 2),
+            "rapide" if ratio > 1 else "lente"
+        ))
+        ratio = temps_multithread/temps_multiproc
+        print("La version multi-process est {} fois plus {} que la version multi-thread.".format(
+            round(1 - ratio, 2) * -1 if ratio > 1 else round(1 - ratio, 2),
+            "rapide" if ratio > 1 else "lente"
+        ))
+
+    print(estimations_sequentielles)
+    print(temps_multithreads)
+    print(temps_multiprocs)
+    results = [round(1 - temps_multithread/temps_multiproc, 2) * -1
+               for i, (temps_multithread,
+                       temps_multiproc) in enumerate(zip(temps_multithreads,
+                                                         temps_multiprocs))]
+    for i, temps in enumerate(results):
+        print(i+1, "\t", temps)
+
+    fig, ax = plt.subplots()
+    ax.plot(range(1, length+1),
+            results)
+    ax.set(xlabel="table length",
+           ylabel="gain ratio")
+    ax.grid()
+
+    plt.xticks(range(0, length, 4))
+    plt.show()
+
 
