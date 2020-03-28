@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import pyautogui
 import time
 
@@ -10,14 +8,14 @@ COOKIE_full_droite = (397, 595)
 
 def click(x, y):
     pyautogui.platformModule._click(x, y, pyautogui.LEFT)
-    time.sleep(0.004)
+    time.sleep(0.002)
 
 
 if __name__ == "__main__":
 
     # COOKIE = COOKIE_gauche
-    # COOKIE = COOKIE_droite
-    COOKIE = COOKIE_full_droite
+    COOKIE = COOKIE_droite
+    # COOKIE = COOKIE_full_droite
 
     pyautogui.moveTo(*COOKIE)
     click(*COOKIE)

@@ -3,7 +3,6 @@ import datetime
 import time
 import multiprocessing
 import multiprocessing.pool
-import matplotlib
 import matplotlib.pyplot as plt
 
 
