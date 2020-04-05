@@ -3,7 +3,7 @@ import json
 import math
 import matplotlib.pyplot as plt
 
-PATH = r"C:\Users\bzera\PycharmProjects\covid-19\csse_covid_19_daily_reports"
+PATH = r"/csse_covid_19_daily_reports"
 
 
 def classify_per_property(geojson, prop_name, func_filter, size_depends_of_func=None):
