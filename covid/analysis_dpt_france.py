@@ -48,7 +48,7 @@ for i, path in enumerate(PATHS):
         severe.append(sum(severe_to_sum))
         critical.append(sum(critical_to_sum))
         deaths.append(sum(deaths_to_sum))
-        recovered.append(sum(deaths_to_sum))
+        recovered.append(sum(recovered_to_sum))
 
     plt.subplot(len(PATHS), 1, i+1)
     plt.plot(range(1, len(confirmed)+1),

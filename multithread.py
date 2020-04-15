@@ -32,8 +32,6 @@ def fonction(valeur, a, b):
     begin = time.time()
     # print(valeur, a, b)
     (valeur**valeur**(valeur-2))#*(valeur**valeur**(valeur-2))*(valeur**valeur**(valeur-2))
-    # (valeur**valeur**(valeur-2))*(valeur**valeur**(valeur-2))*(valeur**valeur**(valeur-2))
-    # valeur**(valeur-1)**(valeur-2)
     return {"i": a,
             "version": b,
             "current_time": datetime.datetime.now().strftime("""%H:%M'%S" """),
@@ -42,15 +40,16 @@ def fonction(valeur, a, b):
 
 if __name__ == "__main__":
     main_value = 9
-    length = 40
+    length = 8
 
     estimations_sequentielles = []
     temps_multithreads = []
     temps_multiprocs = []
 
-    for l in range(1, length+1):
-        print("\n", l)
-        t = [main_value] * l
+    for l in range(100, (main_value+1)*100, 25):
+        l /= 100
+        print("\n", length, "calculs à la suite de {val}**{val}**{val}-2.".format(val=l))
+        t = [l] * length
 
         begin = time.time()
         fonction(main_value, -1, "solo")
@@ -98,13 +97,13 @@ if __name__ == "__main__":
         print(i+1, "\t", temps)
 
     fig, ax = plt.subplots()
-    ax.plot(range(1, length+1),
+    ax.plot(range(1, len(results)),
             results)
     ax.set(xlabel="table length",
            ylabel="gain ratio")
     ax.grid()
 
-    plt.xticks(range(0, length, 4))
+    plt.xticks(range(0, len(results), 4))
     plt.show()
 
 
