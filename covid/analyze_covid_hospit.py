@@ -118,6 +118,10 @@ for cas, couleur in (("hospitalises", "black"),
              "-",
              label=cas,
              c=couleur)
+plt.plot(range(2, len(compiled_data[cas])+1),
+         [0]*(len(compiled_data[cas])-1),
+         ":",
+         c="grey")
 plt.title("Nouveaux cas")
 plt.xlim(1, len(compiled_data["hospitalises"])+1)
 plt.show()
@@ -150,4 +154,5 @@ for dpt_number, dpt_data in pop_in_each_dpt.items():
                                 })
 with open("departments_taux.json", "w", encoding="utf-8") as output:
     json.dump(geojson, output)
+print("(geojson généré avec succès)")
 
