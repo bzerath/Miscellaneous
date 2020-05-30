@@ -115,7 +115,7 @@ if __name__ == "__main__":
                                   func=animate,
                                   frames=files,
                                   blit=True,
-                                  interval=200,
+                                  interval=50,
                                   repeat=False)
 
     plt.gcf().set_size_inches(15, 9)

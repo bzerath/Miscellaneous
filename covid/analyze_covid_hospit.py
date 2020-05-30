@@ -1,13 +1,18 @@
 import csv
 import datetime
+import git
 import json
 import locale
 import matplotlib.pyplot as plt
 
 
 locale.setlocale(locale.LC_ALL, "")
-PATH = r"C:\Users\bzera\PycharmProjects" \
-       r"\opencovid19-fr-data\data-sources\sante-publique-france\covid_hospit.csv"
+PATH = r"C:\Users\bzera\PycharmProjects\opencovid19-fr-data"
+repo = git.Repo(PATH)
+o = repo.remotes.origin
+o.pull()
+
+PATH += r"\data-sources\sante-publique-france\covid_hospit.csv"
 
 
 pop_in_each_dpt = {}
@@ -26,6 +31,7 @@ with open(r"C:\Users\bzera\PycharmProjects\covid-19\departements-france"
                                          }
 
 departements = {}
+x_axis = []
 
 with open(PATH, "r", encoding="utf-8") as csvfile:
     reader = csv.DictReader(csvfile, delimiter=";")
@@ -35,21 +41,23 @@ with open(PATH, "r", encoding="utf-8") as csvfile:
                                                  "reanimation": [],
                                                  "gueris": [],
                                                  "deces": [],
+                                                 "x_axis": [],
                                                  "hospitalises_tous": 0,
                                                  "reanimation_tous": 0,
                                                  "gueris_tous": 0,
                                                  "deces_tous": 0,
                                                  },
-                                        "H": {"hospitalises": [],
-                                              "reanimation": [],
-                                              "gueris": [],
-                                              "deces": []},
-                                        "F": {"hospitalises": [],
-                                              "reanimation": [],
-                                              "gueris": [],
-                                              "deces": []}
+                                        # "H": {"hospitalises": [],
+                                        #       "reanimation": [],
+                                        #       "gueris": [],
+                                        #       "deces": []},
+                                        # "F": {"hospitalises": [],
+                                        #       "reanimation": [],
+                                        #       "gueris": [],
+                                        #       "deces": []}
                                         }
         if row["sexe"] == "0":
+            departements[row["dep"]]["Tous"]["x_axis"].append(datetime.datetime.strptime(row["jour"], "%Y-%m-%d"))
             departements[row["dep"]]["Tous"]["hospitalises"].append(int(row["hosp"]))
             departements[row["dep"]]["Tous"]["reanimation"].append(int(row["rea"]))
             departements[row["dep"]]["Tous"]["gueris"].append(int(row["rad"]))
@@ -72,16 +80,16 @@ with open(PATH, "r", encoding="utf-8") as csvfile:
                 pop_in_each_dpt[row["dep"]]["taux_deces"] = \
                     departements[row["dep"]]["Tous"]["deces_tous"] \
                     / pop_in_each_dpt[row["dep"]]["population"]
-        if row["sexe"] == "1":
-            departements[row["dep"]]["H"]["hospitalises"].append(int(row["hosp"]))
-            departements[row["dep"]]["H"]["reanimation"].append(int(row["rea"]))
-            departements[row["dep"]]["H"]["gueris"].append(int(row["rad"]))
-            departements[row["dep"]]["H"]["deces"].append(int(row["dc"]))
-        if row["sexe"] == "2":
-            departements[row["dep"]]["F"]["hospitalises"].append(int(row["hosp"]))
-            departements[row["dep"]]["F"]["reanimation"].append(int(row["rea"]))
-            departements[row["dep"]]["F"]["gueris"].append(int(row["rad"]))
-            departements[row["dep"]]["F"]["deces"].append(int(row["dc"]))
+        # if row["sexe"] == "1":
+        #     departements[row["dep"]]["H"]["hospitalises"].append(int(row["hosp"]))
+        #     departements[row["dep"]]["H"]["reanimation"].append(int(row["rea"]))
+        #     departements[row["dep"]]["H"]["gueris"].append(int(row["rad"]))
+        #     departements[row["dep"]]["H"]["deces"].append(int(row["dc"]))
+        # if row["sexe"] == "2":
+        #     departements[row["dep"]]["F"]["hospitalises"].append(int(row["hosp"]))
+        #     departements[row["dep"]]["F"]["reanimation"].append(int(row["rea"]))
+        #     departements[row["dep"]]["F"]["gueris"].append(int(row["rad"]))
+        #     departements[row["dep"]]["F"]["deces"].append(int(row["dc"]))
         last_date = datetime.datetime.strftime(datetime.datetime.strptime(row["jour"], "%Y-%m-%d"),
                                                "%A %d %B %Y")
 

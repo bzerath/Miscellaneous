@@ -13,8 +13,8 @@ def click(x, y):
 
 if __name__ == "__main__":
 
-    # COOKIE = COOKIE_gauche
-    COOKIE = COOKIE_droite
+    COOKIE = COOKIE_gauche
+    # COOKIE = COOKIE_droite
     # COOKIE = COOKIE_full_droite
 
     pyautogui.moveTo(*COOKIE)
