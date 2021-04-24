@@ -1,8 +1,9 @@
-import os
 import glob
 import json
-import git
+import os
+import time
 
+import git
 import matplotlib.pyplot as plt
 
 # Path to cloned repo https://github.com/kalisio/covid-19
@@ -10,6 +11,8 @@ PATH = r"C:\Users\bzera\PycharmProjects\covid-19"
 repo = git.Repo(PATH)
 o = repo.remotes.origin
 o.pull()
+time.sleep(1)
+
 
 PATHS = {"Departements": "departements-france/departements-france-2020*",
          "Regions": "regions-france/regions-france-2020*",

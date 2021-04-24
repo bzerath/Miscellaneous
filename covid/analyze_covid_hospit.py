@@ -1,16 +1,21 @@
 import csv
 import datetime
-import git
 import json
 import locale
-import matplotlib.pyplot as plt
+import time
 
+import git
+import matplotlib.pyplot as plt
 
 locale.setlocale(locale.LC_ALL, "")
 PATH = r"C:\Users\bzera\PycharmProjects\opencovid19-fr-data"
-repo = git.Repo(PATH)
-o = repo.remotes.origin
-o.pull()
+try:
+    repo = git.Repo(PATH)
+    o = repo.remotes.origin
+    o.pull()
+except git.exc.GitCommandError as e:
+    print(e)
+time.sleep(1)
 
 PATH += r"\data-sources\sante-publique-france\covid_hospit.csv"
 
@@ -95,7 +100,7 @@ with open(PATH, "r", encoding="utf-8") as csvfile:
 
 
 compiled_data = {}
-plt.subplot(2, 1, 1)
+# plt.subplot(2, 1, 1)
 for cas, couleur in (("hospitalises", "black"),
                      ("gueris", "green"),
                      ("reanimation", "orange"),
@@ -104,16 +109,16 @@ for cas, couleur in (("hospitalises", "black"),
                           zip(*[data["Tous"][cas]
                                 for data in departements.values()
                                 if len(data["Tous"][cas]) > 1])]
-    plt.plot(range(1, len(compiled_data[cas])+1),
-             compiled_data[cas],
-             "-",
-             label=cas,
-             c=couleur)
-plt.xlim(1, len(compiled_data["hospitalises"])+1)
-plt.title("Malades selon geodes.santepubliquefrance.fr")
-plt.legend()
-
-plt.subplot(2, 1, 2)
+#     plt.plot(range(1, len(compiled_data[cas])+1),
+#              compiled_data[cas],
+#              "-",
+#              label=cas,
+#              c=couleur)
+# plt.xlim(1, len(compiled_data["hospitalises"])+1)
+# plt.title("Malades selon geodes.santepubliquefrance.fr")
+# plt.legend()
+#
+# plt.subplot(2, 1, 2)
 for cas, couleur in (("hospitalises", "black"),
                      ("gueris", "green"),
                      ("reanimation", "orange"),
@@ -132,6 +137,7 @@ plt.plot(range(2, len(compiled_data[cas])+1),
          c="grey")
 plt.title("Nouveaux cas")
 plt.xlim(1, len(compiled_data["hospitalises"])+1)
+plt.legend()
 plt.show()
 
 print("En date du {jour}, il y a eu {deces} décès pour {gueris} retours à domicile. "

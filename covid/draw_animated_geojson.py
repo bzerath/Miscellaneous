@@ -2,16 +2,27 @@ import matplotlib; matplotlib.use("TkAgg")
 
 import csv
 import os
+import git
 import glob
 import hashlib
 import math
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+import time
 import warnings
 from typing import Callable
 
 # Path to cloned repo
-PATH = r"C:\Users\bzera\PycharmProjects\CSSEGISandData_COVID-19\csse_covid_19_data\csse_covid_19_daily_reports"
+PATH = r"C:\Users\bzera\PycharmProjects\CSSEGISandData_COVID-19"
+try:
+    repo = git.Repo(PATH)
+    o = repo.remotes.origin
+    o.pull()
+except git.exc.GitCommandError as e:
+    print(e)
+time.sleep(1)
+
+PATH += r"\csse_covid_19_data\csse_covid_19_daily_reports"
 
 
 def classify_per_property(data: csv.DictReader,
@@ -115,7 +126,7 @@ if __name__ == "__main__":
                                   func=animate,
                                   frames=files,
                                   blit=True,
-                                  interval=50,
+                                  interval=10,
                                   repeat=False)
 
     plt.gcf().set_size_inches(15, 9)

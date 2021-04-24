@@ -1,18 +1,22 @@
 import datetime
-import git
 import glob
-import yaml
 import os
+import time
 
+import git
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
-
+import yaml
 
 PATH = r"C:\Users\bzera\PycharmProjects\opencovid19-fr-data"
-repo = git.Repo(PATH)
-o = repo.remotes.origin
-o.pull()
+try:
+    repo = git.Repo(PATH)
+    o = repo.remotes.origin
+    o.pull()
+except git.exc.GitCommandError as e:
+    print(e)
+time.sleep(1)
 
 PATH += r"\ministere-sante"
 
