@@ -1,5 +1,6 @@
 """
 https://blog.callicode.fr/post/2021/covid_pass.html
+https://github.com/hannob/vacdec/blob/main/vacdec
 """
 
 import os
