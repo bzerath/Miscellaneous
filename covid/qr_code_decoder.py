@@ -2,11 +2,10 @@
 https://blog.callicode.fr/post/2021/covid_pass.html
 """
 
-from datetime import datetime
 import os
 import zlib
+from datetime import datetime
 
-# Modules tiers (Pillow, Pyzbar, base45, cbor2)
 import PIL.Image
 import base45
 import cbor2
@@ -14,6 +13,9 @@ import pyzbar.pyzbar
 
 
 class Payload:
+    """
+    Juste pour rendre l'analyse et le print plus buvables.
+    """
     def __init__(self, payload: dict):
         self.raw_payload = payload
 
