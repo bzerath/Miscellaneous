@@ -31,7 +31,7 @@ def multiproc_this_loop(func: collections.Callable,
 def fonction(valeur, a, b):
     begin = time.time()
     # print(valeur, a, b)
-    (valeur**valeur**(valeur-2))#*(valeur**valeur**(valeur-2))*(valeur**valeur**(valeur-2))
+    valeur**valeur**(valeur-2)
     return {"i": a,
             "version": b,
             "current_time": datetime.datetime.now().strftime("""%H:%M'%S" """),
@@ -40,22 +40,20 @@ def fonction(valeur, a, b):
 
 if __name__ == "__main__":
     main_value = 9
-    length = 8
 
     estimations_sequentielles = []
     temps_multithreads = []
     temps_multiprocs = []
 
-    for l in range(100, (main_value+1)*100, 25):
-        l /= 100
-        print("\n", length, "calculs à la suite de {val}**{val}**{val}-2.".format(val=l))
-        t = [l] * length
+    for l in range(1, 100, 10):
+        print("\n", l, "calculs à la suite de {val}**{val}**{val}-2.".format(val=main_value))
+        t = [main_value] * l
 
         begin = time.time()
-        fonction(main_value, -1, "solo")
-        fonction(main_value, -1, "solo")
-        fonction(main_value, -1, "solo")
-        estimation_sequentiel = ((time.time() - begin)/3)*l
+        n = 5
+        for i in range(5):
+            fonction(main_value, -1, "solo")
+        estimation_sequentiel = ((time.time() - begin)/n)*l
         print("Estimation en séquentiel :", estimation_sequentiel)
         estimations_sequentielles.append(round(estimation_sequentiel, 2))
 
@@ -73,7 +71,6 @@ if __name__ == "__main__":
         temps_multiproc = time.time() - begin
         print("Multiproc :", temps_multiproc)
         temps_multiprocs.append(round(temps_multiproc, 2))
-        # pprint.pprint(resultat_proc)
 
         ratio = estimation_sequentiel/temps_multithread
         print("La version multi-thread est {} fois plus {} que la version séquentielle.".format(
@@ -97,7 +94,7 @@ if __name__ == "__main__":
         print(i+1, "\t", temps)
 
     fig, ax = plt.subplots()
-    ax.plot(range(1, len(results)),
+    ax.plot(range(0, len(results)),
             results)
     ax.set(xlabel="table length",
            ylabel="gain ratio")
