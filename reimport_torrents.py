@@ -26,9 +26,16 @@ session = requests.Session()
 
 def login():
     r = session.post(f"{QBIT_URL}/api/v2/auth/login",
-                      data={"username": USERNAME, "password": PASSWORD})
-    r.raise_for_status()
-    if r.text != "Ok.":
+                     data={"username": USERNAME, "password": PASSWORD})
+    r.raise_for_status()  # lève une exception si code >= 400
+
+    # qBittorrent 5.x renvoie parfois un 204 No Content (corps vide) au lieu
+    # du classique "Ok." en 200 — ce n'est pas un échec. On vérifie plutôt
+    # la présence du cookie de session. Depuis qBittorrent 5.x, ce cookie
+    # s'appelle "QBT_SID_<port>" et non plus simplement "SID".
+    cookies = session.cookies.get_dict()
+    if not any(
+            name.startswith("SID") or name.startswith("QBT_SID") for name in cookies):
         raise RuntimeError("Échec de connexion à qBittorrent (identifiants ?)")
 
 
